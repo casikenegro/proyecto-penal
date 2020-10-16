@@ -20,5 +20,6 @@ Route::get('articulos','ArticuloController@index');
 Route::get('articulos/delito/{id}','ArticuloController@show');
 Route::apiResource('atenuantes-agravantes','AtenuanteAgravanteController');
 Route::post('login','UserController@login');
-Route::post('sentencia/{id}','DelitoController@sentencia');
+Route::post('sentencia/{id}','DelitoController@sentencia'); 
+//sentencia, recibe atenuante y agravante, que son ambos enteros, o sea contadores de lo seleccionado
 

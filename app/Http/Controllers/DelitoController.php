@@ -20,14 +20,16 @@ class DelitoController extends Controller
 
     public function sentencia(Request $req, $id){
         $delito = Delito::find($id);
+        if(!$req->atenuante && !$req->agravante ){
+        return response()->json(['data'=> "debe selecionar atenuante o agravante" ],403);
+
+        }
         if($req->atenuante == 0 && $req->agravante > 1 ){
             return response()->json(['data'=> $delito->max ],200);
-        }
-        if($req->atenuante === $req->agravante){
-            return response()->json(['data'=> ($delito->min + $delito->max)/2 ],200);
         }
         if($req->atenuante > 0 &&  $req->agravante < 1){
             return response()->json(['data'=> $delito->min ],200);
         } 
+        return response()->json(['data'=> ($delito->min + $delito->max)/2 ],200);
     }
 }
