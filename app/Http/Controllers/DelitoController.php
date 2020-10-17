@@ -24,7 +24,7 @@ class DelitoController extends Controller
         if(!$req->atenuante && !$req->agravante ){
             return response()->json(['data'=> "debe selecionar atenuante o agravante" ],403);
         }
-        $delito->articulos = Articulo::select('codigo')->where('delito_id',$id)->get();
+        $delito->articulos = Articulo::select('codigo','descripcion')->where('delito_id',$id)->get();
         if($req->atenuante == 0 && $req->agravante > 1 ){
             $delito->pena = $delito->max;
         }else if($req->atenuante > 0 &&  $req->agravante < 1){
