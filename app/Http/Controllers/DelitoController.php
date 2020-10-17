@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Delito;
+use App\Models\Articulo;
 use Illuminate\Http\Request;
 
 class DelitoController extends Controller
@@ -21,15 +22,16 @@ class DelitoController extends Controller
     public function sentencia(Request $req, $id){
         $delito = Delito::find($id);
         if(!$req->atenuante && !$req->agravante ){
-        return response()->json(['data'=> "debe selecionar atenuante o agravante" ],403);
-
+            return response()->json(['data'=> "debe selecionar atenuante o agravante" ],403);
         }
+        $delito->articulos = Articulo::select('codigo')->where('delito_id',$id)->get();
         if($req->atenuante == 0 && $req->agravante > 1 ){
-            return response()->json(['data'=> $delito->max ],200);
+            $delito->pena = $delito->max;
+        }else if($req->atenuante > 0 &&  $req->agravante < 1){
+            $delito->pena = $delito->min;
+        } else{
+           $delito->pena= ($delito->min + $delito->max)/2;
         }
-        if($req->atenuante > 0 &&  $req->agravante < 1){
-            return response()->json(['data'=> $delito->min ],200);
-        } 
-        return response()->json(['data'=> ($delito->min + $delito->max)/2 ],200);
+        return response()->json(['data'=> $delito],200);
     }
 }
